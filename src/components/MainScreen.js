@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, SafeAreaView, TouchableOpacity} from 'react-native';
+import {Dimensions, SafeAreaView, TouchableOpacity, View} from 'react-native';
 import Drawer from "react-native-drawer";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -11,6 +11,10 @@ const {
 } = Dimensions.get('screen');
 
 class MainScreen extends Component {
+    state = {
+        drawerOpen: false
+    };
+
     render() {
         return (
             <Drawer
@@ -18,6 +22,7 @@ class MainScreen extends Component {
                 type="static"
                 tapToClose={true}
                 openDrawerOffset={120}
+                styles={Styles.drawer}
                 tweenHandler={(ratio) => ({
                     drawer: {
                         paddingLeft: 20 * ratio,
@@ -26,32 +31,23 @@ class MainScreen extends Component {
                         top: screenHeight * (0.125 * ratio),
                         width: screenWidth * (1 - (0.25 * ratio)),
                         height: screenHeight * (1 - (0.25 * ratio)),
-                        borderRadius: 10 * ratio,
-                        shadowOffset: {width: -5, height: 0},
-                        padding: 10 * ratio,
+                        transform: [{
+                            skewX: `${2 * ratio}deg`
+                        }]
                     }
                 })}
-                styles={{
-                    main: {
-                        overflow: 'hidden',
-                        shadowColor: '#000000',
-                        shadowOpacity: 0.05,
-                        shadowRadius: 3,
-                    }
-                }}
-                content={<DrawerContent/>}
+                onOpenStart={() => this.setState({drawerOpen: true})}
+                onCloseStart={() => this.setState({drawerOpen: false})}
+                content={(
+                    <DrawerContent
+                        open={this.state.drawerOpen}
+                    />
+                )}
             >
-                <SafeAreaView style={{
-                    flex: 1,
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    backgroundColor: 'white'
-                }}>
+                <SafeAreaView style={Styles.container}>
                     <TouchableOpacity
                         style={Styles.menuButton}
-                        onPress={() => {
-                            this.drawer.open();
-                        }}
+                        onPress={() => this.drawer.open()}
                     >
                         <Icon
                             name="hamburger"
@@ -65,6 +61,23 @@ class MainScreen extends Component {
 }
 
 const Styles = {
+    container: {
+        left: -3,
+        bottom: -3.5,
+        flex: 1,
+        borderRadius: 10,
+        // overflow: 'hidden',
+        borderLeftWidth: 3,
+        borderLeftColor: 'rgba(0,0,0,0.2)',
+        borderBottomWidth: 3.5,
+        borderBottomColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: 'white'
+    },
+    drawer: {
+        main: {
+
+        }
+    },
     menuButton: {
         marginLeft: 20,
         marginTop: 10,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 
 import i18n from '../../i18n';
 
@@ -13,26 +13,52 @@ const MENU_ITEMS = [
 ];
 
 class DrawerContent extends Component {
-
     logOutPressed = () => {
     };
 
     menuItemPressed = ({index}) => {
     };
 
-    renderMenuItems = () => (
-        MENU_ITEMS.map((item, index) => (
-            <TouchableOpacity
-                key={`MenuItem_${index}`}
-                style={Styles.menuItemWrapper}
-                onPress={() => this.menuItemPressed({item, index})}
-            >
-                <Text style={Styles.menuItemText}>
-                    {item}
-                </Text>
-            </TouchableOpacity>
-        ))
-    );
+    renderMenuItems = () => {
+        if (!this.animationValues) {
+            return null;
+        }
+
+        return MENU_ITEMS.map((item, index) => {
+            const leftPos = this.animationValues[index].interpolate({
+                inputRange: [0, 1],
+                outputRange: [-200, 0]
+            });
+
+            return (
+                <TouchableOpacity
+                    key={`MenuItem_${index}`}
+                    onPress={() => this.menuItemPressed({item, index})}
+                >
+                    <Animated.View style={[Styles.menuItemWrapper, {
+                        left: leftPos
+                    }]}>
+                        <Text style={Styles.menuItemText}>
+                            {item}
+                        </Text>
+                    </Animated.View>
+                </TouchableOpacity>
+            );
+        })
+    };
+
+    componentWillReceiveProps(nextProps) {
+        Animated.stagger(100, this.animationValues.map((value, index) =>
+            Animated.spring(value, {
+                toValue: nextProps.open ? 1 : 0
+            }))
+        ).start();
+    }
+
+    componentDidMount() {
+        this.animationValues = [...new Array(MENU_ITEMS.length)]
+            .map(() => new Animated.Value(0));
+    }
 
     render() {
         return (
