@@ -48,7 +48,7 @@ class DrawerContent extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        Animated.stagger(100, this.animationValues.map((value, index) =>
+        Animated.stagger(50, this.animationValues.map((value, index) =>
             Animated.spring(value, {
                 toValue: nextProps.open ? 1 : 0
             }))
@@ -56,16 +56,34 @@ class DrawerContent extends Component {
     }
 
     componentDidMount() {
-        this.animationValues = [...new Array(MENU_ITEMS.length)]
+        this.animationValues = [...new Array(MENU_ITEMS.length + 1)]
             .map(() => new Animated.Value(0));
     }
 
+    componentWillUnmount() {
+        delete this.animationValues;
+    }
+
     render() {
+        if (!this.animationValues) {
+            return null;
+        }
+
+        const imageScale = this.animationValues[this.animationValues.length - 1].interpolate({
+            inputRange: [0,1],
+            outputRange: [0,1]
+        });
+
         return (
             <SafeAreaView style={Styles.container}>
                 <View style={Styles.profilePictureContainer}>
-                    <Image
-                        style={Styles.profilePictureImage}
+                    <Animated.Image
+                        style={[Styles.profilePictureImage, {
+                            transform: [
+                                {scaleX: imageScale},
+                                {scaleY: imageScale},
+                            ]
+                        }]}
                         source={ProfilePicture}
                     />
                 </View>
@@ -97,7 +115,7 @@ const Styles = {
     container: {
         flex: 1,
         backgroundColor: '#FAFAFA',
-        paddingLeft: 20,
+        marginLeft: 20,
     },
     profilePictureContainer: {
         marginTop: 100,

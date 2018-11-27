@@ -24,9 +24,7 @@ class MainScreen extends Component {
                 openDrawerOffset={120}
                 styles={Styles.drawer}
                 tweenHandler={(ratio) => ({
-                    drawer: {
-                        paddingLeft: 20 * ratio,
-                    },
+                    drawer: {},
                     main: {
                         top: screenHeight * (0.125 * ratio),
                         width: screenWidth * (1 - (0.25 * ratio)),
@@ -66,7 +64,6 @@ const Styles = {
         bottom: -3.5,
         flex: 1,
         borderRadius: 10,
-        // overflow: 'hidden',
         borderLeftWidth: 3,
         borderLeftColor: 'rgba(0,0,0,0.2)',
         borderBottomWidth: 3.5,
