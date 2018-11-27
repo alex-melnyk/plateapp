@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
-import {View} from "react-native";
+import {Animated} from "react-native";
 
 class Card extends Component {
     render() {
         const {
             children,
-            color
+            color,
+            style
         } = this.props;
 
         return (
-            <View style={[Styles.container, {
+            <Animated.View style={[Styles.container, {
                 backgroundColor: color
-            }]}>
+            }, style]}>
                 {children}
-            </View>
+            </Animated.View>
         );
     }
 }

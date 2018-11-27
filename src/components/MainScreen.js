@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {Animated, SafeAreaView, Dimensions, ScrollView, View} from 'react-native';
 import Drawer from "react-native-drawer";
 
 import i18n from '../i18n';
 import {Card, DrawerContent, Header} from "./common";
 import {Colors, getRandomColor} from "../utils";
+
+const screenWidth = Dimensions.get('screen').width;
+
+const CARDS_AMOUNT = 10;
 
 class MainScreen extends Component {
     state = {
@@ -13,21 +17,41 @@ class MainScreen extends Component {
     };
 
     renderCards = () => (
-        this.state.cards.map((card, i) => (
-            <Card {...card}/>
-        ))
+        this.state.cards.map((card, i) => {
+            const position = this.animationValues[i].interpolate({
+                inputRange: [0,1],
+                outputRange: [-screenWidth, 0]
+            });
+
+            return (
+                <Card
+                    {...card}
+                    style={{
+                        left: position
+                    }}
+                />
+            );
+        })
     );
 
     componentDidMount() {
-        const cards = [...new Array(10)].map((v, i) => ({
+        const cards = [...new Array(CARDS_AMOUNT)].map((v, i) => ({
             key: `card_${i}`,
             color: getRandomColor()
         }));
 
         this.setState({cards});
+
+        this.animationValues = [...new Array(CARDS_AMOUNT)].map(() => new Animated.Value(0));
+
+        Animated.stagger(100, this.animationValues.map((value, index) => Animated.spring(value, {toValue: 1}))).start();
     }
 
     render() {
+        if (!this.animationValues) {
+            return null;
+        }
+
         return (
             <Drawer
                 ref={(ref) => this.drawer = ref}
