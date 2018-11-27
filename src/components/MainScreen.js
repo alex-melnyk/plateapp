@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
-import {Dimensions, SafeAreaView, ScrollView} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 import Drawer from "react-native-drawer";
 
 import i18n from '../i18n';
-import {DrawerContent, Card, Header} from "./common";
-import {getRandomColor} from "../utils";
-
-const {
-    width: screenWidth,
-    height: screenHeight
-} = Dimensions.get('screen');
+import {Card, DrawerContent, Header} from "./common";
+import {Colors, getRandomColor} from "../utils";
 
 class MainScreen extends Component {
     state = {
@@ -44,9 +39,14 @@ class MainScreen extends Component {
                     main: {
                         transform: [
                             {skewX: `${2 * ratio}deg`},
-                            {scaleX: (1 - (0.25* ratio))},
-                            {scaleY: (1 - (0.25* ratio))}
-                        ]
+                            {scaleX: (1 - (0.25 * ratio))},
+                            {scaleY: (1 - (0.25 * ratio))}
+                        ],
+                        borderRadius: 13,
+                        borderLeftWidth: 5 * ratio,
+                        borderLeftColor: 'rgba(0,0,0,0.2)',
+                        borderBottomWidth: 5 * ratio,
+                        borderBottomColor: 'rgba(0,0,0,0.2)'
                     }
                 })}
                 onOpenStart={() => this.setState({drawerOpen: true})}
@@ -58,13 +58,19 @@ class MainScreen extends Component {
                 )}
             >
                 <SafeAreaView style={Styles.container}>
-                    <Header
-                        title={i18n.t('screen_profile_head')}
-                        onLeftPress={() => this.drawer.open()}
-                    />
-                    <ScrollView>
-                        {this.renderCards()}
-                    </ScrollView>
+                    <View style={{
+                        backgroundColor: 'white'
+                    }}>
+                        <Header
+                            bgColor={Colors.bgHeader}
+                            tintColor={Colors.tintHeader}
+                            title={i18n.t('screen_profile_head')}
+                            onLeftPress={() => this.drawer.open()}
+                        />
+                        <ScrollView>
+                            {this.renderCards()}
+                        </ScrollView>
+                    </View>
                 </SafeAreaView>
             </Drawer>
         );
@@ -73,20 +79,16 @@ class MainScreen extends Component {
 
 const Styles = {
     container: {
-        left: -3,
-        bottom: -3.5,
+        // left: -3,
+        // bottom: -3.5,
         flex: 1,
+        overflow: 'hidden',
         borderRadius: 10,
-        borderLeftWidth: 3,
-        borderLeftColor: 'rgba(0,0,0,0.2)',
-        borderBottomWidth: 3.5,
-        borderBottomColor: 'rgba(0,0,0,0.2)',
-        backgroundColor: 'white'
+        backgroundColor: Colors.bgHeader
     },
     drawer: {
-        main: {
-
-        }
+        drawer: {},
+        main: {}
     }
 };
 

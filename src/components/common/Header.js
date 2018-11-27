@@ -2,20 +2,26 @@ import React, {Component} from 'react';
 import {Text, TouchableOpacity, View} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Header = ({title, onLeftPress}) => (
-    <View style={Styles.container}>
+const Header = ({bgColor, tintColor, title, onLeftPress}) => (
+    <View style={[Styles.container, {
+        backgroundColor: bgColor
+    }]}>
         <View style={Styles.sideButtonContainer}>
             <TouchableOpacity
                 onPress={() => onLeftPress && onLeftPress()}
             >
                 <Icon
                     name="hamburger"
-                    style={Styles.sideButtonIcon}
+                    style={[Styles.sideButtonIcon, {
+                        color: tintColor
+                    }]}
                 />
             </TouchableOpacity>
         </View>
         <View style={Styles.title}>
-            <Text style={Styles.titleText}>{title}</Text>
+            <Text style={[Styles.titleText, {
+                color: tintColor
+            }]}>{title}</Text>
         </View>
         <View style={Styles.sideButtonContainer}>
         </View>
@@ -24,8 +30,8 @@ const Header = ({title, onLeftPress}) => (
 
 const Styles = {
     container: {
-        marginHorizontal: 15,
-        marginVertical: 5,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -33,17 +39,15 @@ const Styles = {
         flex: 0.2,
     },
     title: {
-        flex: 1,
+        flex: 1
     },
     titleText: {
         fontSize: 18,
         fontWeight: '600',
-        textAlign: 'center',
-        color: '#1A1A1A'
+        textAlign: 'center'
     },
     sideButtonIcon: {
-        fontSize: 24,
-        color: '#0F1524'
+        fontSize: 24
     }
 };
 

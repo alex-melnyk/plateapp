@@ -24,7 +24,7 @@ const Styles = {
         marginVertical: 5,
         minHeight: 180,
         borderRadius: 15,
-        borderWidth: 3,
+        borderWidth: 4,
         borderColor: '#F0F0F0',
         backgroundColor: '#FFFFFF'
     }

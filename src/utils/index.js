@@ -1,3 +1,5 @@
+export * from './Colors';
+
 /**
  * Generates color string rgba(0,0,0,alpha).
  *

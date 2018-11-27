@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Animated, Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 
 import i18n from '../../i18n';
+import {Colors} from "../../utils";
 
 import ProfilePicture from '../../assets/img/profile_user.jpg';
 
@@ -48,7 +49,7 @@ class DrawerContent extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        Animated.stagger(50, this.animationValues.map((value, index) =>
+        Animated.stagger(100, this.animationValues.map((value, index) =>
             Animated.spring(value, {
                 toValue: nextProps.open ? 1 : 0
             }))
@@ -70,43 +71,49 @@ class DrawerContent extends Component {
         }
 
         const imageScale = this.animationValues[this.animationValues.length - 1].interpolate({
-            inputRange: [0,1],
-            outputRange: [0,1]
+            inputRange: [0, 1],
+            outputRange: [0, 1]
         });
 
         return (
-            <SafeAreaView style={Styles.container}>
-                <View style={Styles.profilePictureContainer}>
-                    <Animated.Image
-                        style={[Styles.profilePictureImage, {
-                            transform: [
-                                {scaleX: imageScale},
-                                {scaleY: imageScale},
-                            ]
-                        }]}
-                        source={ProfilePicture}
-                    />
-                </View>
-                <View style={Styles.profileDetailsContainer}>
-                    <Text style={Styles.profileDetailsName}>
-                        {i18n.t('profile_name')}
-                    </Text>
-                    <Text style={Styles.profileDetailsLocation}>
-                        {i18n.t('profile_location')}
-                    </Text>
-                </View>
-                <View style={Styles.menuContainer}>
-                    {this.renderMenuItems()}
-                </View>
+            <View style={Styles.container}>
+                <ScrollView style={{
+                    overflow: 'visible'
+                }}>
+                    <Animated.View style={[Styles.profilePictureContainer,{
+                        transform: [
+                            {scaleX: imageScale},
+                            {scaleY: imageScale},
+                        ]
+                    }]}>
+                        <Animated.Image
+                            style={Styles.profilePictureImage}
+                            source={ProfilePicture}
+                        />
+                    </Animated.View>
+                    <View style={Styles.profileDetailsContainer}>
+                        <Text style={Styles.profileDetailsName}>
+                            {i18n.t('profile_name')}
+                        </Text>
+                        <Text style={Styles.profileDetailsLocation}>
+                            {i18n.t('profile_location')}
+                        </Text>
+                    </View>
+                    <View style={Styles.menuContainer}>
+                        {this.renderMenuItems()}
+                    </View>
+                </ScrollView>
                 <TouchableOpacity
                     style={[Styles.menuItemWrapper, Styles.logOutWrapper]}
                     onPress={this.logOutPressed}
                 >
-                    <Text style={Styles.menuItemText}>
+                    <Text style={[Styles.menuItemText, {
+                        fontWeight: '600'
+                    }]}>
                         {i18n.t('logout')}
                     </Text>
                 </TouchableOpacity>
-            </SafeAreaView>
+            </View>
         );
     }
 }
@@ -114,19 +121,19 @@ class DrawerContent extends Component {
 const Styles = {
     container: {
         flex: 1,
-        backgroundColor: '#FAFAFA',
-        marginLeft: 20,
+        paddingLeft: 20,
     },
     profilePictureContainer: {
         marginTop: 100,
         width: 70,
         height: 70,
         borderRadius: 35,
+        overflow: 'hidden'
     },
     profilePictureImage: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover'
     },
     profileDetailsContainer: {
         marginTop: 30,
@@ -136,11 +143,13 @@ const Styles = {
         fontFamily: 'Helvetica Neue',
         fontSize: 18,
         fontWeight: '600',
+        color: Colors.tintDrawer,
     },
     profileDetailsLocation: {
         fontFamily: 'Helvetica Neue',
         fontSize: 14,
         fontWeight: '400',
+        color: Colors.tintDrawer,
     },
     menuContainer: {
         flex: 1,
@@ -150,6 +159,8 @@ const Styles = {
     menuItemText: {
         lineHeight: 50,
         fontSize: 16,
+        fontWeight: '400',
+        color: Colors.tintDrawer,
     },
     logOutWrapper: {
         marginBottom: 50
