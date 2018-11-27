@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Dimensions, SafeAreaView, TouchableOpacity, View} from 'react-native';
+import {Dimensions, SafeAreaView, ScrollView} from 'react-native';
 import Drawer from "react-native-drawer";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {DrawerContent} from "./common";
+import i18n from '../i18n';
+import {DrawerContent, Card, Header} from "./common";
+import {getRandomColor} from "../utils";
 
 const {
     width: screenWidth,
@@ -12,8 +13,24 @@ const {
 
 class MainScreen extends Component {
     state = {
-        drawerOpen: false
+        drawerOpen: false,
+        cards: []
     };
+
+    renderCards = () => (
+        this.state.cards.map((card, i) => (
+            <Card {...card}/>
+        ))
+    );
+
+    componentDidMount() {
+        const cards = [...new Array(10)].map((v, i) => ({
+            key: `card_${i}`,
+            color: getRandomColor()
+        }));
+
+        this.setState({cards});
+    }
 
     render() {
         return (
@@ -24,14 +41,12 @@ class MainScreen extends Component {
                 openDrawerOffset={120}
                 styles={Styles.drawer}
                 tweenHandler={(ratio) => ({
-                    drawer: {},
                     main: {
-                        top: screenHeight * (0.125 * ratio),
-                        width: screenWidth * (1 - (0.25 * ratio)),
-                        height: screenHeight * (1 - (0.25 * ratio)),
-                        transform: [{
-                            skewX: `${2 * ratio}deg`
-                        }]
+                        transform: [
+                            {skewX: `${2 * ratio}deg`},
+                            {scaleX: (1 - (0.25* ratio))},
+                            {scaleY: (1 - (0.25* ratio))}
+                        ]
                     }
                 })}
                 onOpenStart={() => this.setState({drawerOpen: true})}
@@ -43,15 +58,13 @@ class MainScreen extends Component {
                 )}
             >
                 <SafeAreaView style={Styles.container}>
-                    <TouchableOpacity
-                        style={Styles.menuButton}
-                        onPress={() => this.drawer.open()}
-                    >
-                        <Icon
-                            name="hamburger"
-                            style={Styles.menuButtonIcon}
-                        />
-                    </TouchableOpacity>
+                    <Header
+                        title={i18n.t('screen_profile_head')}
+                        onLeftPress={() => this.drawer.open()}
+                    />
+                    <ScrollView>
+                        {this.renderCards()}
+                    </ScrollView>
                 </SafeAreaView>
             </Drawer>
         );
@@ -74,14 +87,6 @@ const Styles = {
         main: {
 
         }
-    },
-    menuButton: {
-        marginLeft: 20,
-        marginTop: 10,
-    },
-    menuButtonIcon: {
-        fontSize: 24,
-        color: '#0F1524'
     }
 };
 

@@ -8,5 +8,7 @@ export default {
     menu_item_rewards: 'Rewards',
 
     profile_name: 'Ryan Klair',
-    profile_location: 'Dubai, United Arab Emirates'
+    profile_location: 'Dubai, United Arab Emirates',
+
+    screen_profile_head: 'Profile'
 };
